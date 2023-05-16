@@ -89,12 +89,12 @@ h1 {
 #filtros {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: left;
   margin-bottom: 20px;
 }
 
 #filtros select {
-  padding: 8px;
+  padding: 2px;
   text-decoration: #70ad47;
   font-size: 14px;
   width: 8%;
