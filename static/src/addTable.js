@@ -1,5 +1,105 @@
+$(document).ready(function () {
+  generarFiltros();
+
+  function generarFiltros() {
+    var columnas = $("#tabla-aves thead th").length;
+
+    for (var i = 0; i < columnas; i++) {
+      var nombreColumna = $("#tabla-aves thead th").eq(i).text();
+      var opciones = obtenerOpcionesColumna(i);
+      var filtroHtml =
+        '<label for="filtro-' + i + '">' + nombreColumna + "</label>";
+      filtroHtml +=
+        '<select id="filtro-' +
+        i +
+        '" class="filtro" data-columna="' +
+        i +
+        '">';
+      filtroHtml += '<option value="">Todos</option>';
+
+      for (var j = 0; j < opciones.length; j++) {
+        filtroHtml +=
+          '<option value="' + opciones[j] + '">' + opciones[j] + "</option>";
+      }
+      filtroHtml += "</select>";
+
+      $("#filtros").append(filtroHtml);
+    }
+
+    $(".filtro").on("change", function () {
+      filtrarTabla();
+    });
+  }
+
+  function obtenerOpcionesColumna(columna) {
+    var opciones = [];
+
+    $("#tabla-aves tbody tr").each(function () {
+      var valor = $(this)
+        .find("td:nth-child(" + (columna + 1) + ")")
+        .text();
+
+      if (opciones.indexOf(valor) === -1) {
+        opciones.push(valor);
+      }
+    });
+
+    return opciones;
+  }
+
+  function filtrarTabla() {
+    $("#tabla-aves tbody tr").hide();
+
+    $("#tabla-aves tbody tr").each(function () {
+      var fila = $(this);
+
+      var mostrarFila = true;
+
+      $(".filtro").each(function () {
+        var columna = $(this).data("columna");
+        var valorFiltro = $(this).val();
+        var valorCelda = fila
+          .find("td:nth-child(" + (columna + 1) + ")")
+          .text();
+
+        if (valorFiltro && valorFiltro !== valorCelda) {
+          mostrarFila = false;
+        }
+      });
+
+      if (mostrarFila) {
+        fila.show();
+      }
+    });
+  }
+
+  // Cargar imágenes desde la carpeta
+  function cargarImagenes() {
+    var carpetaImagenes = "/static/images/";
+
+    $("#tabla-aves tbody tr").each(function () {
+      var nombreImagen = $(this).find("td:last-child").text();
+      var extension = nombreImagen.split(".").pop().toLowerCase();
+      if (extension === "jpg" || extension === "jpeg") {
+        var imagenHtml =
+          '<img class="imagen-tabla" src="' +
+          carpetaImagenes +
+          nombreImagen +
+          '" alt="Imagen">';
+        $(this).find("td:last-child").empty(); // Eliminar contenido existente
+        $(this).append("<td>" + imagenHtml + "</td>"); // Agregar imagen en nueva celda
+        console.log("Imagen cargada:", nombreImagen);
+      }
+    });
+  }
+
+  // Llamar a la función de carga de imágenes después de crear la tabla principal
+  generarTabla();
+  cargarImagenes();
+});
+
 // Obtener el csv
-var csv_url = "../../data/sg_edit.csv";
+var csv_url = "../../data/avesReportadasUni.csv";
 
 fetch(csv_url)
   .then((response) => response.text())
@@ -48,6 +148,7 @@ fetch(csv_url)
         nextBtn.disabled = false;
       }
 
+      cargarImagenes(); // Cargar imágenes después de mostrar la página actual
       adjustTableSize(); // ajustar el tamaño de la tabla después de mostrar la página
     }
 
