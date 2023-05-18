@@ -7,6 +7,20 @@ body {
   padding: 0;
 }
 
+.headerlogo {
+  padding: 2px;
+  text-align: center;
+  width: 99%;
+}
+
+.headerlogo img {
+  width: 100%;
+}
+
+.headerlogo {
+  margin-bottom: 5px;
+}
+
 .container {
   max-width: 800px;
   margin: 0 auto;
