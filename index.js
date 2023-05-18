@@ -1,6 +1,6 @@
 $(document).ready(function () {
   // Obtener el csv
-  var csv_url = "../../data/avesReportadasUni.csv";
+  var csv_url = "../data/avesReportadasUni.csv";
   var rows = [];
 
   fetch(csv_url)
